@@ -1,6 +1,8 @@
 package com.example.api_exercise;
 
-import java.net.HttpURLConnection;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
@@ -45,51 +47,57 @@ public class APIExercise {
             } else {
 //                  ensure that lat and lon are two digits and four decimal places (required by the api)
 //                  https://www.geeksforgeeks.org/how-to-set-precision-for-double-values-in-java/
-//                String sLat = String.format("%.4f", lat);
-//                String sLon = String.format("%.4f", lon);
-////                  retrieve metadata for location based on lat and lon
-//                TODO: move url and connection here
-//                try {
-//                    String inline = "";
-////                    TODO: create url here and give it lat and lon
-////                    TODO: api call on given coords
-//                    Scanner scanner = new Scanner(url.openStream());
-//                    while (scanner.hasNext()) {
-//                        inline += scanner.nextLine();
-//                    }
-//                    scanner.close();
-//                    System.out.println(inline);
-//                } catch (Exception e) {
-//                    System.out.println(e);
-//                }
-//                System.out.println(userInput);
+                String sLat = String.format("%.4f", lat);
+                String sLon = String.format("%.4f", lon);
+
+//                connect to api, given lat and lon
+                String urlString = "https://api.weather.gov/points/" + sLat + "," + sLon;
+                URL url = null;
+                URLConnection conn = null;
+        //        create url
+                try {
+        //			URL is deprecated, use URI
+        //			URL url = new URL(urlString);
+                    url = new URI(urlString).toURL();
+                } catch (Exception e) {
+                    System.out.println(e);
+                    return; // exit early if url fails (would lead to a NullPointerException on conn below)
+                }
+
+        //		create connection and read from it
+                try {
+                    conn = url.openConnection();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        System.out.println(inputLine);
+                    }
+                    in.close();
+                } catch(Exception e) {
+                    System.out.println(e);
+                }
+//                get the properties object from the api
+
+//                then get the forecast and forecastHourly from properties
+
+                try {
+                    String inline = "";
+                    Scanner scanner = new Scanner(url.openStream());
+                    while (scanner.hasNext()) {
+                        inline += scanner.nextLine();
+                    }
+                    scanner.close();
+                    System.out.println(inline);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
             }
         }
 //        } while ( !(userInput.toLowerCase(Locale.ROOT).equals("q")) );
         uiScanner.close();
 //
 //
-//        String urlString = "https://api.weather.gov";
-//        URL url = null;
-//        HttpURLConnection conn = null;
-////        create url
-//        try {
-////			URL is deprecated, use URI
-////			URL url = new URL(urlString);
-//            url = new URI(urlString).toURL();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//            return; // exit early if url fails (would lead to a NullPointerException on conn below)
-//        }
 //
-////		create connection
-//        try {
-//            conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestMethod("GET");
-//            conn.connect();
-//        } catch(Exception e) {
-//            System.out.println(e);
-//        }
 //
 //        // get response code
 //        int responseCode = -1;
