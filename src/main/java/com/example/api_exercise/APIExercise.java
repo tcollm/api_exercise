@@ -3,6 +3,8 @@ package com.example.api_exercise;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Locale;
+import java.util.Scanner;
 
 public class APIExercise {
     String urlString = "https://api.weather.gov";
@@ -32,13 +34,14 @@ public class APIExercise {
     }
 
     //	for testing connection
-    void getResponseCode() {
+    int getResponseCode() {
+        int responseCode = -1;
         try {
-            int responseCode = conn.getResponseCode();
-            System.out.println(responseCode);
+            responseCode =  conn.getResponseCode();
         } catch(Exception e) {
             System.out.println(e);
         }
+        return responseCode;
     }
 
     void getForecast() {
@@ -47,6 +50,26 @@ public class APIExercise {
 
     public static void main(String[] args) {
         APIExercise exercise = new APIExercise();
-        exercise.getResponseCode();
+//        exercise.getResponseCode(); // for testing
+        int rCode = exercise.getResponseCode();
+        if (rCode != 200) {
+            System.out.println("Error connecting to API, Response Code: " + rCode);
+        } else if (rCode == -1) {
+            System.out.println("Error getting response code");
+        } else {
+            System.out.println("Successfully connected to API...");
+
+//          get user input
+            Scanner scanner = new Scanner(System.in);
+            String userInput;
+            do {
+                System.out.println("Enter a state (q to quit): ");
+                userInput = scanner.nextLine();
+//                TODO: format user input to ensure that states are correctly formatted
+//                TODO: api call on given state
+                System.out.println(userInput);
+            } while ( !(userInput.toLowerCase(Locale.ROOT).equals("q")) );
+            scanner.close();
+        }
     }
 }
