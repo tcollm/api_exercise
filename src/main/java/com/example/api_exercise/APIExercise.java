@@ -82,6 +82,7 @@ public class APIExercise {
                             try {
                                 if (conn.getResponseCode() != 200) {
                                     System.out.println(conn.getResponseMessage());
+                                    System.out.println("Don't forget that South and West are entered as negatives, i.e. 118.2426° W is -118.2426. (I kept forgetting that, which resulted in 404 errors from the api.");
                                 } else {
                                     //                convert input to json
                                     String forecast = "";
