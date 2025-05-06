@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Scanner;
+import org.json.*;
 
 public class APIExercise {
 
@@ -65,35 +66,50 @@ public class APIExercise {
                 }
 
         //		create connection and read from it
+                StringBuilder response = new StringBuilder();
+                String inputLine = "";
                 try {
                     conn = url.openConnection();
                     BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String inputLine;
                     while ((inputLine = in.readLine()) != null) {
-                        System.out.println(inputLine);
+//                        System.out.println(inputLine);
+                        response.append(inputLine);
                     }
                     in.close();
                 } catch(Exception e) {
                     System.out.println(e);
                 }
-//                get the properties object from the api
 
-//                then get the forecast and forecastHourly from properties
-
+//                convert input to json
                 try {
-                    String inline = "";
-                    Scanner scanner = new Scanner(url.openStream());
-                    while (scanner.hasNext()) {
-                        inline += scanner.nextLine();
-                    }
-                    scanner.close();
-                    System.out.println(inline);
+                    JSONObject json = new JSONObject(response.toString());
+
+//                  get properties
+                    JSONObject props = json.getJSONObject("properties");
+//                    get forecast and forecastHourly from properties
+                    String forecast = props.getString("forecast");
+                    String forecastHourly = props.getString("forecastHourly");
+
+//                    System.out.println(forecast);
+//                    System.out.println(forecastHourly);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
+
+
+//                try {
+//                    String inline = "";
+//                    Scanner scanner = new Scanner(url.openStream());
+//                    while (scanner.hasNext()) {
+//                        inline += scanner.nextLine();
+//                    }
+//                    scanner.close();
+//                    System.out.println(inline);
+//                } catch (Exception e) {
+//                    System.out.println(e);
+//                }
             }
         }
-//        } while ( !(userInput.toLowerCase(Locale.ROOT).equals("q")) );
         uiScanner.close();
 //
 //
@@ -112,9 +128,6 @@ public class APIExercise {
 //            System.out.println("Error getting response code");
 //        } else {
 //            System.out.println("Successfully connected to API...");
-//
-//
-////
 //        }
     }
 }
