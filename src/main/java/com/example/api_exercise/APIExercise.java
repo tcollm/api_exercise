@@ -95,9 +95,57 @@ public class APIExercise {
                                         System.out.println(e);
                                     }
 
+                                    while (!(userInput.toLowerCase(Locale.ROOT).equals("d")) || !(userInput.toLowerCase(Locale.ROOT).equals("h"))) {
+                                        System.out.println("Would you like the daily forecast (type: 'd') or the hourly forecast (type: 'h')?");
+                                        userInput = uiScanner.nextLine();
 
-                                    System.out.println("Would you like the daily forecast (type: 'd') or the hourly forecast (type: 'h')?");
-                                    userInput = uiScanner.nextLine();
+//                                    get the type of forecast requested by the user
+                                        if (!(userInput.toLowerCase(Locale.ROOT).equals("d")) && !(userInput.toLowerCase(Locale.ROOT).equals("h"))) {
+                                            System.out.println("Error: please enter 'd' for the daily forecast or 'h' for the hourly forecast.");
+                                        } else {
+//                                            get daily or hourly forecast
+//                                            TODO: convert this to a function (it's reused)
+                                            String urlString1 = "";
+                                            if (userInput.toLowerCase(Locale.ROOT).equals("d")) { // get daily forecast
+                                                urlString1 = forecast;
+                                            } else if (userInput.toLowerCase(Locale.ROOT).equals("h")) { // get hourly
+                                                urlString1 = forecastHourly;
+                                            }
+
+                                            URL url1 = null;
+                                            HttpURLConnection conn1 = null;
+                                            //        create url
+                                            try {
+                                                //			URL is deprecated, use URI
+                                                //			URL url = new URL(urlString);
+                                                url1 = new URI(urlString1).toURL();
+                                            } catch (Exception e) {
+                                                System.out.println(e);
+                                                return; // exit early if url fails (would lead to a NullPointerException on conn below)
+                                            }
+
+                                            //		create connection and read from it
+                                            StringBuilder response1 = new StringBuilder();
+                                            String inputLine1 = "";
+                                            try {
+                                                conn1 = (HttpURLConnection) url1.openConnection();
+                                                BufferedReader in1 = new BufferedReader(new InputStreamReader(conn1.getInputStream()));
+                                                while ((inputLine1 = in1.readLine()) != null) {
+//                                              System.out.println(inputLine);
+                                                    response1.append(inputLine1);
+                                                }
+                                                in1.close();
+                                            } catch(Exception e) {
+                                                System.out.println(e);
+                                            }
+
+                                            System.out.println(response1.toString());
+
+                                            break;
+                                        }
+
+
+                                    }
                                 }
                             } catch (IOException e) {
                                 System.out.println(e);
